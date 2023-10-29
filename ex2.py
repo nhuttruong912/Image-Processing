@@ -1,27 +1,28 @@
 # INT13146 Image Processing (Xu ly Anh)
 # Nguyen Phan Nhut Truong N20DCCN082
-import cv2
+
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Tải hình ảnh thang độ xám
-img = cv2.imread("lady.bin", cv2.IMREAD_GRAYSCALE)
+# Define the image I
+COLS, ROWS = np.meshgrid(np.arange(8), np.arange(8))
+w0 = 2 * np.pi / 8
+I = 1 - 2 ** (-COLS) - 2 ** (-ROWS)
+I *= np.exp(1j * w0 * (COLS + ROWS))
 
-# Vẽ biểu đồ cho hình ảnh
-plt.hist(img.ravel(), bins=256, range=(0, 256), color='gray')
-plt.xlabel('Pixel Intensity')
-plt.ylabel('Frequency')
-plt.title('Histogram of "lady.bin"')
+# Plot the real and imaginary parts of I as grayscale images
+fig, axs = plt.subplots(1, 2)
+axs[0].imshow(np.real(I), cmap='gray', vmin=-1, vmax=1)
+axs[0].set_title('Real part of I')
+axs[1].imshow(np.imag(I), cmap='gray', vmin=-1, vmax=1)
+axs[1].set_title('Imaginary part of I')
 plt.show()
 
-# Thực hiện kéo dài độ tương phản toàn diện
-img_stretched = cv2.normalize(img, None, 0, 255, cv2.NORM_MINMAX)
+# Compute the centered DFT of I
+Itilde = np.fft.fftshift(np.fft.fft2(I))
 
-# Vẽ biểu đồ cho kết quả
-plt.hist(img_stretched.ravel(), bins=256, range=(0, 256), color='gray')
-plt.xlabel('Pixel Intensity')
-plt.ylabel('Frequency')
-plt.title('Histogram of Contrast-Stretched "lady.bin"')
-plt.show()
-
-
+# Print out the real and imaginary parts of Itilde as 8 × 8 ascii floating point arrays
+print('Re[DFT(I)]:')
+print(np.round(np.real(Itilde) * 10**4) * 10**(-4))
+print('Im[DFT(I)]:')
+print(np.round(np.imag(Itilde) * 10**4) * 10**(-4))

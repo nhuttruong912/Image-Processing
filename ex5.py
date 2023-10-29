@@ -6,13 +6,12 @@ import matplotlib.pyplot as plt
 
 # Define the image I
 COLS, ROWS = np.meshgrid(np.arange(8), np.arange(8))
-I = np.sin(2 * np.pi / 8) * np.ones((8, 8))
-I[0, 0] = 2 * np.pi
+I = 2 * np.pi * np.cos(np.pi * COLS + np.pi * ROWS)
 
 # Plot the real and imaginary parts of I as grayscale images
 fig, axs = plt.subplots(1, 2)
-axs[0].imshow(np.real(I), cmap='gray', vmin=-1, vmax=1)
-axs[0].set_title('Real part of I')
+axs[0].imshow(I, cmap='gray', vmin=-1, vmax=1)
+axs[0].set_title('I')
 axs[1].imshow(np.imag(I), cmap='gray', vmin=-1, vmax=1)
 axs[1].set_title('Imaginary part of I')
 plt.show()
